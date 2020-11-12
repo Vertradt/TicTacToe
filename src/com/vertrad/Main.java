@@ -2,138 +2,89 @@ package com.vertrad;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main extends JPanel implements MouseListener{
-   private List<Rectangle2D> rectangle2DS = new ArrayList<>();
-    private int frameWidth = 400;
-    private int frameHeight = 400;
-    private int rectWidth = 130;
-    private int rectHeight = 130;
+public class Main extends JFrame implements ActionListener {
+    private List<JButton> buttons = new ArrayList<>();
+    private JPanel p = new JPanel();
+    private JButton button1 = new JButton();
+    private String a = "O";
+
+    public Main() throws HeadlessException {
+
+        this.setTitle("TicTacToe");
+        this.setPreferredSize(new Dimension(400, 400));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        createButtons();
 
 
-    @Override
-    protected void paintComponent(Graphics g) {
-
-
-        super.paintComponent(g);
-        g.setColor(Color.BLUE);
-//        g.fillRect(0,0,rectWidth,rectHeight);
-//        g.setColor(Color.BLUE);
-//        g.fillRect(131,0,rectWidth,rectHeight);
-//        g.setColor(Color.BLUE);
-//        g.fillRect(262, 0, rectWidth, rectHeight);
-//        g.setColor(Color.BLUE);
-//        g.fillRect(0, 131, rectWidth, rectHeight);
-//        g.setColor(Color.BLUE);
-//        g.fillRect(131, 131, rectWidth, rectHeight);
-//        g.setColor(Color.BLUE);
-//        g.fillRect(262, 131, rectWidth, rectHeight);
-        creatingRectangles();
-        paintingRectangles( (Graphics2D) g);
-
+        settingSigns();
+        this.getContentPane().add(p);
+        this.pack();
+        this.setVisible(true);
     }
 
 
-    private void paintingRectangles( Graphics2D g) {
-
-        for (Rectangle2D rectangle : rectangle2DS) {
-            g.fill(rectangle);
-        }
-    }
-
-    public void mouseClicked(MouseEvent e) {
-
-        for (Rectangle2D rectangle2D : rectangle2DS) {
-
-            if ((e.getButton() == 1) && rectangle2D.contains(e.getX(), e.getY())) {
-                repaint();
-                 JOptionPane.showMessageDialog(null,e.getX()+ "\n" + e.getY());
-            }
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    void creatingRectangles() {
-
-        int x = 0;
-        int y;
+    public void createButtons() {
         for (int i = 0; i < 3; i++) {
-            if (i == 1) {
-                x = rectWidth + 1;
-            } else if (i == 2) {
-                x = (2 * rectWidth) + 2;
-            }
-
             for (int j = 0; j < 3; j++) {
-                if (j == 0) {
-                    y = 0;
-                } else if (j == 1) {
-                    y = rectWidth + 1;
-                } else {
-                    y = 2 * rectHeight + 2;
-                }
+                JButton b1 = new JButton();
+                p.setLayout(null);
+                b1.setBounds(i * 100, j * 100, 100, 100);
 
-                Rectangle2D rectangle2D = new Rectangle2D.Double(y, x, rectWidth, rectHeight);
-
-                rectangle2DS.add(rectangle2D);
+                p.add(b1);
+                buttons.add(b1);
             }
         }
+    }
 
+    void settingSigns() {
+        for (JButton button : buttons) {
+            mouseListener(button);
+        }
+    }
+
+    private void mouseListener(JButton button) {
+        button.addActionListener(e -> {
+            System.out.println(button.getY() + " " + button.getX());
+            if (button.getText().equals("")) {
+                button.setText(a);
+                if (a.equals("O")) {
+                    a = "X";
+                } else {
+                    a = "O";
+
+                }
+            }
+        });
     }
 
     @Override
-    public Dimension getPreferredSize() {
-        // so that our GUI is big enough
-        return new Dimension(rectWidth + 2 * 20, rectHeight + 2 * 20);
+    public void actionPerformed(ActionEvent e) {
+        if (button1.getText().equals("")) {
+            button1.setText(a);
+            if (a.equals("O")) {
+                a = "X";
+            } else {
+                a = "O";
+
+            }
+        }
     }
 
 
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                showWindow();
-
-            }
-        });
-
-
+        SwingUtilities.invokeLater(() -> showWindow());
     }
 
     private static void showWindow() {
-        Main mainPanel = new Main();
+        Main z = new Main();
 
-        JFrame frame = new JFrame("Tic-Tac-Toe");
-        frame.setPreferredSize(new Dimension(mainPanel.frameWidth, mainPanel.frameHeight));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        frame.getContentPane().add(mainPanel);
-        frame.pack();
-        frame.setVisible(true);
     }
+
 }
